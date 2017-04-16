@@ -1,0 +1,133 @@
+// 浏览器路径
+path = "C:\Users\hp431\AppData\Local\Google\Chrome\Application\chrome.exe"
+// 启动浏览器
+If Plugin.chrome.launch(path, "--user-data-dir=c:\user_data") = False Then 
+    TracePrint "启动失败"
+    ExitScript
+End If
+
+// 获取启动浏览器后的默认标签
+id = Plugin.chrome.get_ids()
+If id = "" Then 
+         TracePrint "获取标签id失败"
+        ExitScript
+End If
+
+// 跳转到联盟  http://pub.alimama.com/
+
+Call Plugin.chrome.load(id, "http://pub.alimama.com/")
+//Call Plugin.chrome.load(id, "http://www.baidu.com")
+
+
+
+// 等待载入完成
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id)
+
+// J_Quick2Static
+
+Delay 20000
+
+
+TracePrint Plugin.chrome.exec_js(id, "document.querySelector('iframe').contentWindow.document.getElementById('#J_Quick2Static').outerHTML;")
+//.contentDocument.querySelector('#J_Quick2Static').innerHTML;")
+
+// 点击电脑按钮
+//Call Plugin.chrome.exec_js(id, "document.getElementByTagName('iframe').contentWindow.document.getElementById('#');")
+Delay 500
+
+
+// 点击电脑按钮
+//Call Plugin.chrome.exec_js(id, "document.querySelector('a.left-slide-nav').click();")
+
+
+//Delay 1000
+// 点击登录按钮
+Call Plugin.chrome.exec_js(id, "var a=document.querySelector('iframe').contentWindow.document.getElementById('#J_Quick2Static').outerHTML;alert(a);")
+
+
+
+
+// 等待载入完成
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id)
+
+
+//  选品
+
+//  http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7900221%2F1.1998910419.d435ff811.BVOsGj&channel=qqhd&toPage=2&catIds=1&level=1&dpyhq=1&userType=1&perPageSize=40
+
+//  高佣 女装 天猫 优惠券 销量
+
+// 创建新的窗口 2
+id2 =Plugin.chrome.create()
+
+If id2 = "" Then 
+         TracePrint "获取标签id失败"
+        ExitScript
+End If
+
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
+Delay 500
+
+Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7900221%2F1.1998910419.d435ff811.BVOsGj&channel=qqhd&toPage=1&catIds=1&level=1&dpyhq=1&userType=1&perPageSize=100")
+
+Delay 1000
+//  等待id2 载入完成
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
+
+// 点击 id2的选择全部 连接 
+// 
+call Plugin.chrome.exec_js(id2,"document.querySelector('.select-btn.select-all').click();")
+Delay 2000
+
+// 访问下一页
+Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7900221%2F1.1998910419.d435ff811.BVOsGj&channel=qqhd&toPage=2&catIds=1&level=1&dpyhq=1&userType=1&perPageSize=100")
+
+Delay 500
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
+
+Delay 500
+call Plugin.chrome.exec_js(id2,"document.querySelector('.select-btn.select-all').click();")
+Delay 500
+
+// 加入选品库按钮 class    btn-brand add-selection
+call Plugin.chrome.exec_js(id2,"document.querySelector('.btn-brand.add-selection').click();")
+Delay 500
+
+
+
+//  新建高佣分组按钮  class       btn btn-common w140
+//   iframe id     _oid_ifr_
+
+
+//  组名称输入 框 的 class   input  ：input mr10 w220
+
+//   创建按钮的class名   btn btn-brand w80 mr10
+
+//    加入按钮 class="btn btn-brand w100 mr10 "
+
+//    继续选品 class 名   btn btn-gray w110
+
+
+
+
+
+
+MsgBox "脚本执行完毕"
+// 退出浏览器（如果不退出浏览器下次执行"launch"方法用同一个"--user-data-dir"启动参数会启动失败）
+Call Plugin.chrome.quit()
+
