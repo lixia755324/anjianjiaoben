@@ -1,5 +1,9 @@
-// 浏览器路径
+
+
+
+// chrome 浏览器路径
 path = "C:\Users\hp431\AppData\Local\Google\Chrome\Application\chrome.exe"
+
 // 启动浏览器
 If Plugin.chrome.launch(path, "--user-data-dir=c:\user_data") = False Then 
     TracePrint "启动失败"
@@ -27,9 +31,8 @@ Do
 Loop While Plugin.chrome.is_loading(id)
 
 // J_Quick2Static
-
+//  等待手动操作登录  iframe内的元素操作 忘记如何 完成啦
 Delay 20000
-
 
 TracePrint Plugin.chrome.exec_js(id, "document.querySelector('iframe').contentWindow.document.getElementById('#J_Quick2Static').outerHTML;")
 //.contentDocument.querySelector('#J_Quick2Static').innerHTML;")
@@ -77,7 +80,7 @@ Do
 Loop While Plugin.chrome.is_loading(id2)
 Delay 500
 
-Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7900221%2F1.1998910419.d435ff811.BVOsGj&channel=qqhd&toPage=1&catIds=1&level=1&dpyhq=1&userType=1&perPageSize=100")
+Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7664554.1998457203.59.zpvNdg&channel=qqhd&toPage=1&dpyhq=1&userType=1&catIds=1&level=1&sortType=9&perPageSize=100")
 
 Delay 1000
 //  等待id2 载入完成
@@ -92,7 +95,7 @@ call Plugin.chrome.exec_js(id2,"document.querySelector('.select-btn.select-all')
 Delay 2000
 
 // 访问下一页
-Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7900221%2F1.1998910419.d435ff811.BVOsGj&channel=qqhd&toPage=2&catIds=1&level=1&dpyhq=1&userType=1&perPageSize=100")
+Call Plugin.chrome.load(id2, "http://pub.alimama.com/promo/item/channel/index.htm?spm=a219t.7664554.1998457203.59.zpvNdg&channel=qqhd&toPage=2&dpyhq=1&userType=1&catIds=1&level=1&sortType=9&perPageSize=100")
 
 Delay 500
 Do
@@ -108,24 +111,38 @@ Delay 500
 call Plugin.chrome.exec_js(id2,"document.querySelector('.btn-brand.add-selection').click();")
 Delay 500
 
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
 
 
-//  新建高佣分组按钮  class       btn btn-common w140
-//   iframe id     _oid_ifr_
+//  新建高佣分组按钮  class       btn btn-common w140    btn btn-common w140
+//Call Plugin.chrome.exec_js(id2, "alert('a');")
+Delay 3000
+Call Plugin.chrome.exec_js(id2, "document.querySelector('.w140').click();")
 
 
 //  组名称输入 框 的 class   input  ：input mr10 w220
 
+Delay 3000
+Call Plugin.chrome.exec_js(id2, "document.querySelector('.w220').value='gy女装销量-1';")
+
 //   创建按钮的class名   btn btn-brand w80 mr10
+Delay 3000
+Call Plugin.chrome.exec_js(id2, "document.querySelector('.btn.btn-brand.w80.mr10').click();")
 
-//    加入按钮 class="btn btn-brand w100 mr10 "
+//    加入按钮 class="btn btn-brand w100 mr10 "   btn btn-brand w100 mr10 
 
-//    继续选品 class 名   btn btn-gray w110
+Delay 3000
+Call Plugin.chrome.exec_js(id2, "document.querySelector('.btn.btn-brand.w100.mr10').click();")
 
+//    继续选品 class 名   btn btn-gray w110    btn btn-gray w110
 
+Delay 3000
+Call Plugin.chrome.exec_js(id2, "document.querySelector('.btn.btn-gray.w110').click();")
 
-
-
+Delay 3000
 
 MsgBox "脚本执行完毕"
 // 退出浏览器（如果不退出浏览器下次执行"launch"方法用同一个"--user-data-dir"启动参数会启动失败）
