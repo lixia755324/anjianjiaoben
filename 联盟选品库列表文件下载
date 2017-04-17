@@ -1,0 +1,164 @@
+//选品库 下载 连接
+
+//http://pub.alimama.com/manage/selection/list.htm
+listlink="http://pub.alimama.com/manage/selection/list.htm"
+
+// 浏览器路径
+path = "C:\Users\hp431\AppData\Local\Google\Chrome\Application\chrome.exe"
+// 启动浏览器
+If Plugin.chrome.launch(path, "--user-data-dir=c:\user_data") = False Then 
+    TracePrint "启动失败"
+    ExitScript
+End If
+
+// 获取启动浏览器后的默认标签
+id = Plugin.chrome.get_ids()
+If id = "" Then 
+         TracePrint "获取标签id失败"
+        ExitScript
+End If
+
+// 跳转到联盟  http://pub.alimama.com/
+
+Call Plugin.chrome.load(id, "http://pub.alimama.com/")
+//Call Plugin.chrome.load(id, "http://www.baidu.com")
+
+
+
+// 等待载入完成
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id)
+
+//  等待手动操作 登录 js操作 iframe 内的元素忘记怎么操作啦
+// J_Quick2Static
+
+Delay 20000
+
+//  操作iframe  测试 代码
+//TracePrint Plugin.chrome.exec_js(id, "document.querySelector('iframe').contentWindow.document.getElementById('#J_Quick2Static').outerHTML;")
+//.contentDocument.querySelector('#J_Quick2Static').innerHTML;")
+
+// 点击电脑按钮
+//Call Plugin.chrome.exec_js(id, "document.getElementByTagName('iframe').contentWindow.document.getElementById('#');")
+Delay 500
+
+
+// 点击电脑按钮
+//Call Plugin.chrome.exec_js(id, "document.querySelector('a.left-slide-nav').click();")
+
+
+//Delay 1000
+// 点击登录按钮
+Call Plugin.chrome.exec_js(id, "var a=document.querySelector('iframe').contentWindow.document.getElementById('#J_Quick2Static').outerHTML;alert(a);")
+
+
+
+
+// 等待载入完成
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id)
+
+
+
+// 创建新的窗口 2
+id2 =Plugin.chrome.create()
+
+If id2 = "" Then 
+         TracePrint "获取标签id失败"
+        ExitScript
+End If
+
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
+Delay 500
+
+
+//   id2访问联盟选品库列表页
+Call Plugin.chrome.load(id2, listlink)
+
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id2)
+Delay 500
+
+Delay 2000
+//  采集选品库列表 文件html代码
+listtx=Plugin.chrome.exec_js(id2, "document.querySelector('#sList').innerHTML;")
+
+//TracePrint Plugin.chrome.exec_js(id2, "document.querySelector('#sList').outerHTML;")
+
+	spmb="groupId="
+		
+		
+	//	InStr(listtx,spmb)
+
+	Dim groupid(200)
+	
+	
+	
+	For i = 1 To 200
+	
+	//TracePrint listtx
+	
+	 if InStr(listtx,spmb)=0 Then
+   		 Exit For
+	  End If
+
+    groupid(i)=Mid(listtx,InStr(listtx,spmb)+8,7)
+    
+    listtx=Mid(listtx,InStr(listtx,spmb)+100)
+    TracePrint groupid(i)
+    TracePrint i
+     
+    
+	Next
+
+//  下载连接	
+	
+//http://pub.alimama.com/favorites/item/export.json?spm=a219t.7900221/11.1998910291.dca9f959b&pvid=11_36.40.19.88_429_1492443343660&actionid=303.zg9RHP&scenes=1&adzoneId=71650782&siteId=21268234&groupId=4407577
+
+
+dllinkq = "http://pub.alimama.com/favorites/item/export.json?spm=a219t.7900221/11.1998910291.dca9f959b&pvid=11_36.40.19.88_429_1492443343660&actionid=303.zg9RHP&scenes=1&adzoneId=71650782&siteId=21268234&groupId="
+
+
+// 创建新的窗口 3
+id3 =Plugin.chrome.create()
+
+If id3 = "" Then 
+         TracePrint "获取标签id失败"
+        ExitScript
+End If
+
+Do
+    Delay 1000
+    TracePrint "..."
+Loop While Plugin.chrome.is_loading(id3)
+Delay 500
+
+
+For i=1 To UBound(groupid)
+
+    //这里的脚本可以循环次
+    
+    	
+	//   id3访问联盟选品库列表页
+	Call Plugin.chrome.load(id3, dllinkq&groupid(i))
+	
+	Do
+    	Delay 1000
+    	TracePrint "..."
+	Loop While Plugin.chrome.is_loading(id3)
+	Delay 500
+	
+	Delay 3000
+
+Next
+
+
